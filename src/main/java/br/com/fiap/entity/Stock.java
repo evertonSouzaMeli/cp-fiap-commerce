@@ -5,11 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-@Builder
 @Entity
 @Table(name = "TB_STOCK")
 @SequenceGenerator(name="stock", sequenceName = "SQ_TB_STOCK", allocationSize = 1)
@@ -23,4 +20,12 @@ public class Stock {
 
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
     private List<Product> products;
+
+    public Stock() {
+
+    }
+
+    public Stock(Integer size) {
+        this.size = size;
+    }
 }
