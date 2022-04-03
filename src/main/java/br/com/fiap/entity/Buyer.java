@@ -4,13 +4,11 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-@Builder
 @Entity
 @Table(name = "TB_BUYER")
 @SequenceGenerator(name="buyer", sequenceName = "SQ_TB_BUYER", allocationSize = 1)
@@ -24,12 +22,14 @@ public class Buyer {
 
     @Temporal(TemporalType.TIME)
     @Column(name = "dt_birth_date", nullable = false)
-    private LocalDate birthDate;
+    private Date birthDate;
 
     @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
     private List<Cart> cart;
 
-    public Buyer(String name, LocalDate birthDate) {
+    public Buyer() {}
+
+    public Buyer(String name, Date birthDate) {
         this.name = name;
         this.birthDate = birthDate;
     }
