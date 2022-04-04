@@ -12,6 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
+@Builder
 @Table(name = "TB_PRODUCT")
 @SequenceGenerator(name = "product", sequenceName = "SQ_TB_PRODUCT", allocationSize = 1)
 public class Product {
