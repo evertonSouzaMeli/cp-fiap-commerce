@@ -9,6 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(name = "TB_BUYER")
 @SequenceGenerator(name="buyer", sequenceName = "SQ_TB_BUYER", allocationSize = 1)
