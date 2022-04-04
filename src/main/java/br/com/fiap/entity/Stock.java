@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
+@AllArgsConstructor
 @Getter
 @Setter
 @Builder
@@ -22,9 +23,7 @@ public class Stock {
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
     private List<Product> products;
 
-    public Stock() {
-
-    }
+    public Stock() {}
 
     public Stock(Integer size) {
         this.size = size;
