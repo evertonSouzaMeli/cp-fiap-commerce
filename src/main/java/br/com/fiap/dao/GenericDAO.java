@@ -5,8 +5,8 @@ import br.com.fiap.exception.IdNotFoundException;
 
 import java.util.List;
 
-public interface GenericDAO<R extends Number, T> {
-    List<T> findAll(Class<T> object);
+public interface GenericDAO<R, T> {
+    List<T> findAll();
 
     T findById(R id) throws IdNotFoundException;
 

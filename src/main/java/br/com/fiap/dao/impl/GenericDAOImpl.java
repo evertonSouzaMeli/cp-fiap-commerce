@@ -7,9 +7,8 @@ import br.com.fiap.exception.IdNotFoundException;
 import javax.persistence.EntityManager;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
-import java.util.Optional;
 
-public abstract class GenericDAOImpl<R extends Number, T> implements GenericDAO<R, T> {
+public abstract class GenericDAOImpl<R, T> implements GenericDAO<R, T> {
     protected EntityManager entityManager;
     private Class<T> clazz;
 
@@ -23,14 +22,13 @@ public abstract class GenericDAOImpl<R extends Number, T> implements GenericDAO<
     }
 
     @Override
-    public List<T> findAll(Class<T> tClass) {
-       return entityManager.createQuery("Select t from " + tClass.getSimpleName() + " t").getResultList();
+    public List<T> findAll() {
+       return entityManager.createQuery("Select t from " + clazz.getSimpleName() + " t").getResultList();
     }
 
     @Override
     public T findById(R id) throws IdNotFoundException {
-        Optional<T> entity = (Optional<T>) entityManager.find(clazz, id);
-        return entity.orElseThrow(() -> new IdNotFoundException(String.format("Id {} not found", id).toUpperCase()));
+        return entityManager.find(clazz, id);
     }
 
     @Override
@@ -60,5 +58,9 @@ public abstract class GenericDAOImpl<R extends Number, T> implements GenericDAO<
             entityManager.getTransaction().rollback();
             throw new CommitException("Something bad happened doing rollback".toUpperCase(), e.getCause());
         }
+    }
+
+    public void setClazz(Class<T> t){
+        clazz = t;
     }
 }
