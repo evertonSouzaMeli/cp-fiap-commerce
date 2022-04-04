@@ -10,6 +10,5 @@ public class Main {
     public static void main(String[] args) throws CommitException {
         EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getInstance();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-
     }
 }

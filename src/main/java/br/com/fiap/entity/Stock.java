@@ -7,6 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(name = "TB_STOCK")
 @SequenceGenerator(name="stock", sequenceName = "SQ_TB_STOCK", allocationSize = 1)

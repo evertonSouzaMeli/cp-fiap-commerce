@@ -13,6 +13,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(name = "TB_CART")
 @SequenceGenerator(name="cart", sequenceName = "SQ_TB_CART", allocationSize = 1)
