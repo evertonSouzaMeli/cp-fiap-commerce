@@ -28,4 +28,12 @@ public class Stock {
     public Stock(Integer size) {
         this.size = size;
     }
+
+    @Override
+    public String toString() {
+        return "Stock{" +
+                "id=" + id +
+                ", size=" + size +
+                '}';
+    }
 }

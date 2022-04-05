@@ -49,5 +49,16 @@ public class Product {
         this.price = price;
         this.inclusionDate = Date.from(Instant.from(LocalDateTime.now()));
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", inclusionDate=" + inclusionDate +
+                '}';
+    }
 }
 
