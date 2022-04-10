@@ -20,12 +20,20 @@ public class Stock {
     @Column(name = "nr_size", nullable = false, precision = 3)
     private Integer size;
 
-    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "stock", cascade = CascadeType.REMOVE)
     private List<Product> products;
 
     public Stock() {}
 
     public Stock(Integer size) {
         this.size = size;
+    }
+
+    @Override
+    public String toString() {
+        return "Stock{" +
+                "id=" + id +
+                ", size=" + size +
+                '}';
     }
 }
