@@ -1,8 +1,11 @@
 package br.com.fiap.entity;
 
+import br.com.fiap.dao.impl.StockDAOImpl;
+import br.com.fiap.exception.BusinessException;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -20,13 +23,64 @@ public class Stock {
     @Column(name = "nr_size", nullable = false, precision = 3)
     private Integer size;
 
-    @OneToMany(mappedBy = "stock", cascade = CascadeType.REMOVE)
-    private List<Product> products;
+    @Column(name = "nr_usableSpace", nullable = false)
+    private Integer usableSpace;
+
+    @OneToMany(mappedBy = "stock", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    private List<Product> products = new ArrayList<>();
 
     public Stock() {}
 
     public Stock(Integer size) {
         this.size = size;
+        this.usableSpace = size;
+    }
+    public Stock(Integer size, Product product) {
+        this(size);
+        addProduct(product);
+    }
+
+    public Stock(Integer size, List<Product> productList) {
+        this(size);
+        addProduct(productList);
+    }
+
+    public void addProduct(Product product){
+        if(usableSpace > 0) {
+            usableSpace -= product.getQuantity();
+            product.setStock(this);
+            products.add(product);
+        }else {
+            throw new BusinessException("The stock no longer has usable space");
+        }
+    }
+
+    public void removeProduct(Product product){
+        if(usableSpace < size) {
+            usableSpace += product.getQuantity();
+            products.remove(product);
+        }else {
+            throw new BusinessException("Stock has reached the limit");
+        }
+    }
+
+    private void setUsableSpace(Integer usableSpace){
+        this.usableSpace = usableSpace;
+    }
+
+    public void addProduct(List<Product> productList){
+        productList.forEach(this::addProduct);
+    }
+
+    public void setSize(Integer size) {
+        Integer usableSpace = getUsableSpace();
+        if(size >= usableSpace) {
+            Integer diff = size - this.size;
+            this.size = size;
+            setUsableSpace(usableSpace + diff);
+        }else {
+            throw new BusinessException("You cannot decrease the size of the stock more than the usable space");
+        }
     }
 
     @Override
@@ -34,6 +88,7 @@ public class Stock {
         return "Stock{" +
                 "id=" + id +
                 ", size=" + size +
+                ", usableSpace=" + usableSpace +
                 '}';
     }
 }

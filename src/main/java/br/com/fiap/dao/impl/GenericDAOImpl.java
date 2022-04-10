@@ -2,7 +2,6 @@ package br.com.fiap.dao.impl;
 
 import br.com.fiap.dao.GenericDAO;
 import br.com.fiap.exception.CommitException;
-import br.com.fiap.exception.IdNotFoundException;
 
 import javax.persistence.EntityManager;
 import java.lang.reflect.ParameterizedType;
@@ -27,7 +26,7 @@ public abstract class GenericDAOImpl<R, T> implements GenericDAO<R, T> {
     }
 
     @Override
-    public T findById(R id) throws IdNotFoundException {
+    public T findById(R id)  {
         return entityManager.find(clazz, id);
     }
 
