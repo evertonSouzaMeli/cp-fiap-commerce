@@ -6,6 +6,8 @@ import lombok.*;
 
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
 @Setter
 public class CartDTO {
     private CartStatus status;
-    private Date creationDateTime;
+    private LocalDate creationDateTime;
 
     @Min(value = 1, message = "Price must be greater than 1")
     private BigDecimal total;

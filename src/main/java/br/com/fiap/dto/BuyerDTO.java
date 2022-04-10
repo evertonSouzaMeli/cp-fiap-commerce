@@ -4,6 +4,7 @@ import br.com.fiap.entity.Buyer;
 import lombok.*;
 
 import javax.validation.constraints.Pattern;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class BuyerDTO {
     @Pattern(regexp = "[aA-zZ]{3,50}", message = "The name must contain a minimum of 3 characters and a maximum of 50 characters")
     private String name;
 
-    private Date birthDate;
+    private LocalDate birthDate;
 
     private List<CartDTO> cart;
 

@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -29,15 +30,14 @@ public class Product {
     @Column(name = "nr_price", nullable = false, precision = 6, scale = 2)
     private BigDecimal price;
 
-    @Temporal(TemporalType.TIME)
     @Column(name = "dt_inclusion_date", nullable = false)
-    private Date inclusionDate;
+    private LocalDate inclusionDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "stock_id", referencedColumnName = "id", nullable = false)
     private Stock stock;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "cart_id", referencedColumnName = "id", nullable = false)
     private Cart cart;
 
@@ -47,7 +47,18 @@ public class Product {
         this.name = name;
         this.quantity = quantity;
         this.price = price;
-        this.inclusionDate = Date.from(Instant.from(LocalDateTime.now()));
+        this.inclusionDate = LocalDate.now();
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", inclusionDate=" + inclusionDate +
+                '}';
     }
 }
 
