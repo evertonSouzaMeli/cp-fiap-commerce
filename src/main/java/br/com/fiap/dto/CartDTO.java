@@ -7,12 +7,10 @@ import lombok.*;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
@@ -23,15 +21,19 @@ public class CartDTO {
 
     @Min(value = 1, message = "Price must be greater than 1")
     private BigDecimal total;
-    private BuyerDTO buyer;
-    private List<ProductDTO> products;
+    private List<ProductDTO> products = new ArrayList<>();
+
+    public CartDTO() {
+        this.status = CartStatus.OPEN;
+        this.creationDateTime = LocalDate.now();
+        this.total = BigDecimal.ZERO;
+    }
 
     public static CartDTO toDTO(Cart cart){
         return CartDTO.builder()
                 .status(cart.getStatus())
                 .creationDateTime(cart.getCreationDateTime())
                 .total(cart.getTotal())
-                .buyer(BuyerDTO.toDTO(cart.getBuyer()))
                 .products(ProductDTO.listEntityToDTO(cart.getProducts()))
                 .build();
     }
@@ -41,7 +43,6 @@ public class CartDTO {
                 .status(cartDTO.getStatus())
                 .creationDateTime(cartDTO.getCreationDateTime())
                 .total(cartDTO.getTotal())
-                .buyer(BuyerDTO.toEntity(cartDTO.getBuyer()))
                 .products(ProductDTO.listDTOToEntity(cartDTO.getProducts()))
                 .build();
     }

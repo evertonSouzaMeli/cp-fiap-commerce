@@ -6,6 +6,7 @@ import lombok.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class ProductDTO {
     @Min(value = 1, message = "Price must be greater than 1")
     private BigDecimal price;
 
-    private Date inclusionDate;
+    private LocalDate inclusionDate;
 
     private StockDTO stock;
 

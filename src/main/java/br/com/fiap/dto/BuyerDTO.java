@@ -1,10 +1,13 @@
 package br.com.fiap.dto;
 
 import br.com.fiap.entity.Buyer;
+import br.com.fiap.entity.Cart;
+import br.com.fiap.enums.CartStatus;
 import lombok.*;
 
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,8 +22,14 @@ public class BuyerDTO {
 
     private LocalDate birthDate;
 
-    private List<CartDTO> cart;
+    private List<CartDTO> cart = new ArrayList<>();
 
+    public BuyerDTO(String name, LocalDate birthDate) {
+        CartDTO cartDTO = new CartDTO();
+        this.name = name;
+        this.birthDate = birthDate;
+        cart.add(cartDTO);
+    }
 
     public static BuyerDTO toDTO(Buyer buyer){
         return BuyerDTO.builder()

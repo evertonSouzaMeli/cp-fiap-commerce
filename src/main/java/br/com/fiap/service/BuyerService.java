@@ -6,6 +6,7 @@ import br.com.fiap.entity.Buyer;
 import br.com.fiap.exception.CommitException;
 import br.com.fiap.exception.IdNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 public class BuyerService {
     private BuyerDAOImpl buyerDAO;
@@ -19,7 +20,7 @@ public class BuyerService {
     }
 
     public Buyer findById(Integer id) throws IdNotFoundException {
-         return (Buyer) buyerDAO.findById(id);
+         return Optional.ofNullable(buyerDAO.findById(id)).orElseThrow( () -> new IdNotFoundException());
     }
 
     public void save(BuyerDTO buyerDTO) throws CommitException {

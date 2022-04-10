@@ -46,7 +46,8 @@ public class Buyer {
         return "Buyer{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", birthDate=" + birthDate +
+                ", birthDate=" + birthDate + '\'' +
+                ", cart=" + cart +
                 '}';
     }
 }
