@@ -1,13 +1,11 @@
 package br.com.fiap.entity;
 
+import br.com.fiap.exception.BusinessException;
 import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @AllArgsConstructor
 @Getter
@@ -33,13 +31,13 @@ public class Product {
     @Column(name = "dt_inclusion_date", nullable = false)
     private LocalDate inclusionDate;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "stock_id", referencedColumnName = "id", nullable = false)
-    private Stock stock;
-
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "cart_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
     private Cart cart;
+
+    @ManyToOne
+    @JoinColumn(name = "stock_id")
+    private Stock stock;
 
     public Product() {}
 
@@ -50,6 +48,14 @@ public class Product {
         this.inclusionDate = LocalDate.now();
     }
 
+    public void setQuantity(Integer quantity){
+        Stock stock = getStock();
+        if(stock != null && stock.getUsableSpace() > quantity)
+            this.quantity = quantity;
+        else
+            throw new BusinessException("Quantity of products cannot be greater than the size of the useful space of the stock.");
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -58,6 +64,8 @@ public class Product {
                 ", quantity=" + quantity +
                 ", price=" + price +
                 ", inclusionDate=" + inclusionDate +
+                ", stock=" + (stock != null ? stock.getId() : "null") +
+                ", cart=" + (cart != null ? cart.getId() : "null") +
                 '}';
     }
 }

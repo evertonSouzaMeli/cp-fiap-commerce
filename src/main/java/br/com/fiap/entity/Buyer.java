@@ -1,5 +1,7 @@
 package br.com.fiap.entity;
 
+import br.com.fiap.enums.CartStatus;
+import br.com.fiap.exception.BusinessException;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,20 +28,25 @@ public class Buyer {
     private LocalDate birthDate;
 
     @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
-    private List<Cart> cart = new ArrayList<>();
+    private List<Cart> carts = new ArrayList<>();
 
     public Buyer() {}
-
-    public Buyer(String name, LocalDate birthDate) {
-        this.name = name;
-        this.birthDate = birthDate;
-    }
 
     public Buyer(String name, LocalDate birthDate, Cart cart) {
         this.name = name;
         this.birthDate = birthDate;
-        this.cart.add(cart);
+        addCart(cart);
     }
+
+    public void addCart(Cart cart){
+        if(carts.stream().noneMatch(x -> x.getStatus().equals(CartStatus.OPEN))){
+                cart.setBuyer(this);
+                carts.add(cart);
+        }else {
+            throw new BusinessException("you already have a cart with OPEN status");
+        }
+    }
+
 
     @Override
     public String toString() {
@@ -47,7 +54,7 @@ public class Buyer {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", birthDate=" + birthDate + '\'' +
-                ", cart=" + cart +
+                ", cart=" + carts +
                 '}';
     }
 }

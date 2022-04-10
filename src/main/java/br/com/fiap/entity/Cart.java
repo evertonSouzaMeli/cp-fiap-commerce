@@ -1,15 +1,14 @@
 package br.com.fiap.entity;
 
 import br.com.fiap.enums.CartStatus;
+import br.com.fiap.exception.BusinessException;
 import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -28,24 +27,52 @@ public class Cart {
     @Column(name = "nm_status", nullable = false)
     private CartStatus status;
 
-    @Column(name = "dt_creation_date_time", nullable = true)
-    private LocalDate creationDateTime;
+    @Column(name = "dt_creation_date_time")
+    private LocalDateTime creationDateTime;
 
     @Column(name = "nr_total", precision = 6, scale = 2, nullable = false)
     private BigDecimal total;
 
-    @ManyToOne
-    @JoinColumn(name = "buyer_id", referencedColumnName = "id")
-    private Buyer buyer;
+    @OneToMany(mappedBy = "cart")
+    private List<Product> products = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cart", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    private List<Product> products;
+    @ManyToOne
+    @JoinColumn(name = "buyer_id")
+    private Buyer buyer;
 
     public Cart(){
         this.status = CartStatus.OPEN;
         this.total = BigDecimal.ZERO;
-        this.products = new ArrayList<>();
-        this.creationDateTime = LocalDate.now();
+        this.creationDateTime = LocalDateTime.now();
+    }
+
+    public void addProduct(Product product){
+        product.setCart(this);
+        product.getStock().removeProduct(product);
+        setTotal(getTotal().add(product.getPrice().multiply(BigDecimal.valueOf(product.getQuantity()))));
+        products.add(product);
+    }
+
+    public void addProduct(List<Product> productList){
+        productList.forEach(this::addProduct);
+    }
+
+    public void removeProduct(Product product){
+        Integer size = product.getStock().getSize();
+        Integer usableSpace = product.getStock().getUsableSpace();
+
+        if(usableSpace < size) {
+            setTotal(getTotal().subtract(product.getPrice().multiply(BigDecimal.valueOf(product.getQuantity()))));
+            product.setCart(null);
+            product.getStock().addProduct(product);
+            products.remove(product);
+        }else {
+            throw new BusinessException("Stock has reached the limit");
+        }
+    }
+
+    public void removeProduct(List<Product> productList){
+        productList.forEach(this::removeProduct);
     }
 
     @Override
@@ -54,6 +81,7 @@ public class Cart {
                 ", status=" + status +
                 ", creationDateTime=" + creationDateTime +
                 ", total=" + total +
+                ", buyerId=" + (buyer.equals(null) ? "null" : buyer.getId()) +
                 '}';
     }
 }
