@@ -1,11 +1,15 @@
 package br.com.fiap.entity;
 
+import br.com.fiap.dao.impl.ProductDAOImpl;
 import br.com.fiap.enums.CartStatus;
 import br.com.fiap.exception.BusinessException;
+import br.com.fiap.exception.CommitException;
+import br.com.fiap.singleton.EntityManagerFactorySingleton;
 import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -73,6 +77,22 @@ public class Cart {
 
     public void removeProduct(List<Product> productList){
         productList.forEach(this::removeProduct);
+    }
+
+    public void closeCart() {
+        EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getInstance();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        ProductDAOImpl productDAO = new ProductDAOImpl(entityManager);
+
+        this.setStatus(CartStatus.CLOSED);
+        this.getProducts().forEach(product -> {
+            try {
+                productDAO.delete(product);
+            } catch (CommitException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override
