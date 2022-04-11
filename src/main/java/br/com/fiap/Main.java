@@ -1,19 +1,15 @@
 package br.com.fiap;
 
-import br.com.fiap.dao.impl.BuyerDAOImpl;
-import br.com.fiap.dao.impl.CartDAOImpl;
-import br.com.fiap.dao.impl.ProductDAOImpl;
-import br.com.fiap.dao.impl.StockDAOImpl;
-import br.com.fiap.entity.Buyer;
-import br.com.fiap.entity.Cart;
-import br.com.fiap.entity.Product;
-import br.com.fiap.entity.Stock;
+import br.com.fiap.dao.impl.*;
+import br.com.fiap.entity.*;
 import br.com.fiap.enums.CartStatus;
 import br.com.fiap.exception.CommitException;
 import br.com.fiap.singleton.EntityManagerFactorySingleton;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.io.File;
+import java.io.FileWriter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -129,6 +125,26 @@ public class Main {
                     .findFirst()
                     .get()
                     .getProducts());
+
+
+
+            InvoiceDAOImpl invoiceDAO = new InvoiceDAOImpl(entityManager);
+
+            //Criação da nota fiscal
+            Invoice invoice = new Invoice(Invoice.convertFileToByte(Invoice.createInvoiceFile(cart)));
+
+
+            //Cadastro da nota fiscal (bytes) no banco de dados [upload]
+            invoiceDAO.save(invoice);
+
+            //Obtenção da nota fiscal e conversão em arquivo txt [download]
+            Invoice.convertByteToFile(invoiceDAO.findById(1).getData());
+
+            //remoção do banco de dados
+            invoiceDAO.delete(invoice);
+            System.out.println(invoiceDAO.findAll());
+
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

@@ -1,7 +1,7 @@
 package br.com.fiap.dao.impl;
 
 import br.com.fiap.entity.Cart;
-import br.com.fiap.entity.Stock;
+import br.com.fiap.enums.CartStatus;
 import br.com.fiap.exception.CommitException;
 
 import javax.persistence.EntityManager;
