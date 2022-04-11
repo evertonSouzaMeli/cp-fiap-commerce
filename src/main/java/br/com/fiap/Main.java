@@ -126,7 +126,7 @@ public class Main {
                     .get()
                     .getProducts());
 
-
+            System.out.println("\n ============================================================================= \n");
 
             InvoiceDAOImpl invoiceDAO = new InvoiceDAOImpl(entityManager);
 
