@@ -142,7 +142,7 @@ public class Main {
 
             //remoção do banco de dados
             invoiceDAO.delete(invoice);
-            System.out.println(invoiceDAO.findAll());
+            System.out.println("\n[INVOICE] Primeira consulta\n" + invoiceDAO.findAll());
 
 
         } catch (Exception e) {

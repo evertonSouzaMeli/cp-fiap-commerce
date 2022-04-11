@@ -1,7 +1,0 @@
-Buyer: Maria
-Date: 2022-04-10T23:24:00.264870
-
-Produto: Pão R$0.70
-Produto: Manteiga R$7.80
-
-Total: R$8.5
