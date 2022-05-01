@@ -14,8 +14,8 @@ public class BuyerDAOImpl extends GenericDAOImpl<Integer, Buyer>  {
 
     @Override
     public void delete(Buyer object) throws CommitException {
-        Cart cart = object.getCarts().stream().filter(x -> x.getStatus() == CartStatus.OPEN).findFirst().get();
-        cart.removeProduct(cart.getProducts());
+        Cart cart = object.getCartList().stream().filter(x -> x.getStatus() == CartStatus.OPEN).findFirst().get();
+        cart.removeProduct(cart.getProductList());
         super.delete(object);
     }
 }

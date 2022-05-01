@@ -37,8 +37,10 @@ public class Cart {
     @Column(name = "nr_total", precision = 6, scale = 2, nullable = false)
     private BigDecimal total;
 
-    @OneToMany(mappedBy = "cart")
-    private List<Product> products = new ArrayList<>();
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JoinTable(name = "TB_CART_PRODUCT")
+    private List<Product> productList = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "buyer_id")
@@ -51,10 +53,10 @@ public class Cart {
     }
 
     public void addProduct(Product product){
-        product.setCart(this);
+        product.getCartList().add(this);
         product.getStock().removeProduct(product);
         setTotal(getTotal().add(product.getPrice().multiply(BigDecimal.valueOf(product.getQuantity()))));
-        products.add(product);
+        productList.add(product);
     }
 
     public void addProduct(List<Product> productList){
@@ -67,9 +69,8 @@ public class Cart {
 
         if(usableSpace < size) {
             setTotal(getTotal().subtract(product.getPrice().multiply(BigDecimal.valueOf(product.getQuantity()))));
-            product.setCart(null);
             product.getStock().addProduct(product);
-            products.remove(product);
+            this.getProductList().remove(product);
         }else {
             throw new BusinessException("Stock has reached the limit");
         }
@@ -86,7 +87,7 @@ public class Cart {
         ProductDAOImpl productDAO = new ProductDAOImpl(entityManager);
 
         this.setStatus(CartStatus.CLOSED);
-        this.getProducts().forEach(product -> {
+        this.getProductList().forEach(product -> {
             try {
                 productDAO.delete(product);
             } catch (CommitException e) {
@@ -94,6 +95,7 @@ public class Cart {
             }
         });
     }
+
 
     @Override
     public String toString() {

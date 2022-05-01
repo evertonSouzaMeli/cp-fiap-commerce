@@ -11,7 +11,7 @@ public class CartDAOImpl extends GenericDAOImpl<Integer, Cart>{
 
     @Override
     public void delete(Cart object) throws CommitException {
-        object.getProducts().forEach(object::removeProduct);
+        object.getProductList().forEach(object::removeProduct);
         super.delete(object);
     }
 }

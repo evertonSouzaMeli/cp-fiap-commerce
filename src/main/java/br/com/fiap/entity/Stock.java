@@ -1,6 +1,5 @@
 package br.com.fiap.entity;
 
-import br.com.fiap.dao.impl.StockDAOImpl;
 import br.com.fiap.exception.BusinessException;
 import lombok.*;
 
@@ -27,7 +26,7 @@ public class Stock {
     private Integer usableSpace;
 
     @OneToMany(mappedBy = "stock", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
-    private List<Product> products = new ArrayList<>();
+    private List<Product> productList = new ArrayList<>();
 
     public Stock() {}
 
@@ -40,16 +39,11 @@ public class Stock {
         addProduct(product);
     }
 
-    public Stock(Integer size, List<Product> productList) {
-        this(size);
-        addProduct(productList);
-    }
-
     public void addProduct(Product product){
         if(usableSpace > 0) {
             usableSpace -= product.getQuantity();
             product.setStock(this);
-            products.add(product);
+            productList.add(product);
         }else {
             throw new BusinessException("The stock no longer has usable space");
         }
@@ -58,7 +52,7 @@ public class Stock {
     public void removeProduct(Product product){
         if(usableSpace < size) {
             usableSpace += product.getQuantity();
-            products.remove(product);
+            productList.remove(product);
         }else {
             throw new BusinessException("Stock has reached the limit");
         }
@@ -68,9 +62,9 @@ public class Stock {
         this.usableSpace = usableSpace;
     }
 
-    public void addProduct(List<Product> productList){
-        productList.forEach(this::addProduct);
-    }
+    public void addProduct(Product... product){ productList.forEach(this::addProduct); }
+
+    public void addProduct(List<Product> productList){ productList.forEach(this::addProduct); }
 
     public void setSize(Integer size) {
         Integer usableSpace = getUsableSpace();

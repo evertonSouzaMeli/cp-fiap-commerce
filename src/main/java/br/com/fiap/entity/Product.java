@@ -1,11 +1,14 @@
 package br.com.fiap.entity;
 
+import br.com.fiap.enums.CartStatus;
 import br.com.fiap.exception.BusinessException;
 import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Getter
@@ -31,9 +34,8 @@ public class Product {
     @Column(name = "dt_inclusion_date", nullable = false)
     private LocalDate inclusionDate;
 
-    @ManyToOne
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
+    @ManyToMany(mappedBy = "productList", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Cart> cartList;
 
     @ManyToOne
     @JoinColumn(name = "stock_id")
@@ -56,6 +58,10 @@ public class Product {
             throw new BusinessException("Quantity of products cannot be greater than the size of the useful space of the stock.");
     }
 
+    public Cart getCart(){
+        return this.getCartList().stream().filter(cart -> cart.getStatus().equals(CartStatus.OPEN)).findFirst().get();
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -65,7 +71,7 @@ public class Product {
                 ", price=" + price +
                 ", inclusionDate=" + inclusionDate +
                 ", stock=" + (stock != null ? stock.getId() : "null") +
-                ", cart=" + (cart != null ? cart.getId() : "null") +
+                ", cart=" + (cartList != null ? cartList.stream().filter(product -> product.getId().equals(this.id)).collect(Collectors.toList()) : "null") +
                 '}';
     }
 }

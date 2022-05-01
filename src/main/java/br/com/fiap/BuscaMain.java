@@ -8,21 +8,19 @@ import br.com.fiap.singleton.EntityManagerFactorySingleton;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import java.io.File;
-import java.io.FileWriter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-public class Main {
+public class BuscaMain {
     public static void main(String[] args) throws CommitException {
         try {
             EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getInstance();
             EntityManager entityManager = entityManagerFactory.createEntityManager();
 
             //Criação DAOs
-            CartDAOImpl cartDAO = new CartDAOImpl(entityManager);
+            /*CartDAOImpl cartDAO = new CartDAOImpl(entityManager);
             BuyerDAOImpl buyerDAO = new BuyerDAOImpl(entityManager);
 
             //Criação de Buyer & Cart
@@ -114,17 +112,17 @@ public class Main {
             System.out.println("\n ============================================================================= \n");
 
             //Associação produtos com carrinho
-            novoBuyer.getCarts().stream().filter(x -> x.getStatus().equals(CartStatus.OPEN)).findFirst().get().addProduct(products);
+            novoBuyer.getCartList().stream().filter(x -> x.getStatus().equals(CartStatus.OPEN)).findFirst().get().addProduct(products);
             buyerDAO.update(novoBuyer);
 
             System.out.println("[BUYER] Primeira consulta\n" + buyerDAO.findById(novoBuyer.getId()));
 
             System.out.println("\n[CART] Primeira consulta\n" + buyerDAO.findById(novoBuyer.getId())
-                    .getCarts().stream()
+                    .getCartList().stream()
                     .filter(c -> c.getStatus().equals(CartStatus.OPEN))
                     .findFirst()
                     .get()
-                    .getProducts());
+                    .getProductList());
 
             System.out.println("\n ============================================================================= \n");
 
@@ -142,7 +140,7 @@ public class Main {
 
             //remoção do banco de dados
             invoiceDAO.delete(invoice);
-            System.out.println("\n[INVOICE] Primeira consulta\n" + invoiceDAO.findAll());
+            System.out.println("\n[INVOICE] Primeira consulta\n" + invoiceDAO.findAll());*/
 
 
         } catch (Exception e) {

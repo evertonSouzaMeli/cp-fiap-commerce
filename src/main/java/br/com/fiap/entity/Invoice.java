@@ -39,7 +39,7 @@ public class Invoice {
 
             FileWriter fileWriter = new FileWriter(file);
 
-            List<Product> products = cart.getProducts();
+            List<Product> products = cart.getProductList();
 
             fileWriter.write("Buyer: " + cart.getBuyer().getName());
             fileWriter.write("\nDate: " + LocalDateTime.now() + "\n");

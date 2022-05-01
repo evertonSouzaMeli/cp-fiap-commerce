@@ -1,6 +1,5 @@
 package br.com.fiap.dao.impl;
 
-import br.com.fiap.entity.Cart;
 import br.com.fiap.entity.Stock;
 import br.com.fiap.exception.CommitException;
 
@@ -16,7 +15,7 @@ public class StockDAOImpl extends GenericDAOImpl<Integer, Stock> {
 
     @Override
     public void delete(Stock object) throws CommitException {
-        object.getProducts().forEach(product -> {
+        object.getProductList().forEach(product -> {
             if (product.getCart() != null) {
                 product.getCart().removeProduct(product);
                 try {

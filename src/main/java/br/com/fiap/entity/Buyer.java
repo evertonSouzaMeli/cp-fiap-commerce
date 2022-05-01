@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
@@ -27,24 +28,32 @@ public class Buyer {
     @Column(name = "dt_birth_date", nullable = false)
     private LocalDate birthDate;
 
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
+
     @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
-    private List<Cart> carts = new ArrayList<>();
+    private List<Cart> cartList = new ArrayList<>();
 
-    public Buyer() {}
-
-    public Buyer(String name, LocalDate birthDate, Cart cart) {
+    public Buyer(String name, LocalDate birthDate, Address address, Cart cart) {
         this.name = name;
         this.birthDate = birthDate;
+        this.address = address;
         addCart(cart);
     }
 
     public void addCart(Cart cart){
-        if(carts.stream().noneMatch(x -> x.getStatus().equals(CartStatus.OPEN))){
+        if(cartList.stream().noneMatch(c -> c.getStatus().equals(CartStatus.OPEN))){
                 cart.setBuyer(this);
-                carts.add(cart);
+                cartList.add(cart);
         }else {
+
             throw new BusinessException("you already have a cart with OPEN status");
         }
+    }
+
+    public Cart getCart(){
+        return this.getCartList().stream().filter(cart -> cart.getStatus().equals(CartStatus.OPEN)).findFirst().get();
     }
 
 
@@ -54,7 +63,7 @@ public class Buyer {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", birthDate=" + birthDate + '\'' +
-                ", cart=" + carts +
+                ", cart=" + cartList +
                 '}';
     }
 }
