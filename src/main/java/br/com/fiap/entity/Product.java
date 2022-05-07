@@ -71,7 +71,6 @@ public class Product {
                 ", price=" + price +
                 ", inclusionDate=" + inclusionDate +
                 ", stock=" + (stock != null ? stock.getId() : "null") +
-                ", cart=" + (cartList != null ? cartList.stream().filter(product -> product.getId().equals(this.id)).collect(Collectors.toList()) : "null") +
                 '}';
     }
 }

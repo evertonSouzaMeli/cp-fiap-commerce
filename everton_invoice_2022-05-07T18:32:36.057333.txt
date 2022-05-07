@@ -1,0 +1,6 @@
+Buyer: Everton
+Date: 2022-05-07T18:32:36.064543
+
+Produto: Manteiga R$7.9
+
+Total: R$7.9

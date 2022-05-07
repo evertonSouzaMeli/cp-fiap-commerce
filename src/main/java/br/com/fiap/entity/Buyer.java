@@ -42,6 +42,13 @@ public class Buyer {
         addCart(cart);
     }
 
+    public Buyer(String name, LocalDate birthDate, Address address) {
+        this.name = name;
+        this.birthDate = birthDate;
+        this.address = address;
+        addCart(new Cart());
+    }
+
     public void addCart(Cart cart){
         if(cartList.stream().noneMatch(c -> c.getStatus().equals(CartStatus.OPEN))){
                 cart.setBuyer(this);

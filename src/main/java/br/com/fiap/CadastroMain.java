@@ -1,16 +1,14 @@
 package br.com.fiap;
 
 import br.com.fiap.dao.impl.BuyerDAOImpl;
+import br.com.fiap.dao.impl.InvoiceDAOImpl;
 import br.com.fiap.dao.impl.ProductDAOImpl;
 import br.com.fiap.dao.impl.StockDAOImpl;
 import br.com.fiap.entity.*;
-import br.com.fiap.enums.CartStatus;
-import br.com.fiap.exception.CommitException;
 import br.com.fiap.singleton.EntityManagerFactorySingleton;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -24,25 +22,31 @@ public class CadastroMain {
             BuyerDAOImpl buyerDAO = new BuyerDAOImpl(entityManager);
             StockDAOImpl stockDAO = new StockDAOImpl(entityManager);
             ProductDAOImpl productDAO = new ProductDAOImpl(entityManager);
+            InvoiceDAOImpl invoiceDAO = new InvoiceDAOImpl(entityManager);
 
-            Buyer testBuyer = new Buyer("Everton Souza", LocalDate.of(1996, 3, 9),
-                    new Address("Rua das Flores", "São Paulo", "01000-000"),
-                    new Cart());
+            /** Cadastrando Comprador, Carrinho, Endereço **/
+            //buyerDAO.save(new Buyer("Everton", LocalDate.of(1996, 3, 9), new Address("Rua das Flores", "n°100", "00000000")));
 
-            //String name, Integer quantity, BigDecimal price
-            Stock stock = new Stock(10);
-            stock.addProduct(Arrays.asList(new Product("Leite", 2, new BigDecimal("4.00")),
-                    new Product("Chocolate", 2, new BigDecimal("6.50")),
-                    new Product("Ovo", 2, new BigDecimal("0.50")),
-                    new Product("Farinha", 2, new BigDecimal("5.50"))));
+            /** Cadastramento Estoque e Produto **/
+            /*Stock stock = new Stock(10);
+            stock.addProduct(Arrays.asList(
+                             new Product("Ovo", 2, new BigDecimal(0.50)),
+                             new Product("Farinha", 2, new BigDecimal(5.50)),
+                             new Product("Manteiga", 2, new BigDecimal(7.90)),
+                             new Product("Chocolate", 2, new BigDecimal(15.50))));
+            stockDAO.save(stock);*/
 
-            //stockDAO.save(stock);
-            testBuyer.getCart().addProduct(productDAO.findById(1));
-            buyerDAO.save(testBuyer);
+            /** Adicionando Produto do Estoque ao Carrinho **/
+            /*Buyer buyer = buyerDAO.findById(1);
+            buyer.getCart().addProduct(stockDAO.findById(2).getProductList().get(2));
+            buyerDAO.update(buyer);*/
 
-
+            /** Criando nota fiscal e Cadastrando **/
+            Invoice invoice = new Invoice(Invoice.convertFileToByte(Invoice.createInvoiceFile(buyerDAO.findById(1).getCart())));
+            invoiceDAO.save(invoice);
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException();
         }
     }
