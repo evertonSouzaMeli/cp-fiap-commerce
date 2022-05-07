@@ -42,9 +42,8 @@ public class CadastroMain {
             buyerDAO.update(buyer);*/
 
             /** Criando nota fiscal e Cadastrando **/
-            Invoice invoice = new Invoice(Invoice.convertFileToByte(Invoice.createInvoiceFile(buyerDAO.findById(1).getCart())));
-            invoiceDAO.save(invoice);
-
+            /*Invoice invoice = new Invoice(Invoice.convertFileToByte(Invoice.createInvoiceFile(buyerDAO.findById(1).getCart())));
+            invoiceDAO.save(invoice);*/
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException();
