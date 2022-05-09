@@ -36,8 +36,9 @@ public class Cart {
     private BigDecimal total;
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
-    @JoinTable(name = "TB_CART_PRODUCT")
+    @JoinTable(name = "TB_CART_PRODUCT",
+            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "cart_id", referencedColumnName = "id"))
     private List<Product> productList = new ArrayList<>();
 
     @ManyToOne
